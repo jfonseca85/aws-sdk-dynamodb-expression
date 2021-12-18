@@ -26,5 +26,5 @@ const (
 
 // Enum values for AttributeTableName
 const (
-	AttributeTableNameApp string = "dynamodb-table-appcell"
+	AttributeTableNameApp string = "dynamodb-table-app"
 )

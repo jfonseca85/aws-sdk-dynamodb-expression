@@ -54,10 +54,12 @@ O uso de create-table retorna o seguinte resultado de exemplo.
 ```
 
 Para verificar se o DynamoDB terminou de criar a tabela Music, use o comando describe-table.
+
 ```sh
  aws dynamodb describe-table --table-name Music | grep TableStatus
  
 ```
+
 Esse comando retorna o seguinte resultado. Quando o DynamoDB conclui a criação da tabela, o valor do campo TableStatus é definido como ACTIVE.
 
 ```sh

@@ -9,12 +9,12 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 )
 
-func NextVersion(clientDynamoDB *dynamodb.Client, body *Model) {
+func NextVersion(clientDynamoDB *dynamodb.Client, id string) string {
 	//Função criada para retornar a próxima versão da Célula, cada atualização feita incrementará um versão
 	input := &dynamodb.UpdateItemInput{
 		TableName: aws.String(AttributeTableNameApp),
 		Key: map[string]types.AttributeValue{
-			"ID":      &types.AttributeValueMemberS{Value: body.ID},
+			"ID":      &types.AttributeValueMemberS{Value: id},
 			"Version": &types.AttributeValueMemberS{Value: AttributeVersionReservedVersion},
 		},
 		UpdateExpression: aws.String("SET Latest = if_not_exists(Latest, :defaultval) + :incrval"),
@@ -29,6 +29,6 @@ func NextVersion(clientDynamoDB *dynamodb.Client, body *Model) {
 		fmt.Println("Erro in NextVersion " + err.Error())
 	}
 
-	body.Version = fmt.Sprintf("v%s", output.Attributes["Latest"].(*types.AttributeValueMemberN).Value)
+	return fmt.Sprintf("v%s", output.Attributes["Latest"].(*types.AttributeValueMemberN).Value)
 
 }

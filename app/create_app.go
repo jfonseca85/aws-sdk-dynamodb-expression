@@ -59,7 +59,7 @@ func CreateApp(args map[string]string) (string, error) {
 	}
 	// Using the Config value, create the DynamoDB client
 	client := dynamodb.NewFromConfig(cfg.AWSClient)
-	NextVersion(client, body)
+	NextVersion(client, body.ID)
 
 	output, err := Update(client, body)
 	if err != nil {
