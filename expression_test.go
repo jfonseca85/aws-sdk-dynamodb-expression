@@ -4,12 +4,14 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
-	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/expression"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
+
+	"github.com/jfonseca85/aws-sdk-dynamodb-expression/configlocal"
 )
 
 // Using Update Expression
@@ -17,14 +19,20 @@ import (
 // This example updates an item in the Music table. It adds a new attribute (Year) and
 // modifies the AlbumTitle attribute.  All of the attributes in the item, as they appear
 // after the update, are returned in the response.
-func ExampleBuilder_WithUpdate() {
-	cfg, err := config.LoadDefaultConfig(context.TODO())
-	if err != nil {
-		fmt.Println(err.Error())
-		return
-	}
 
-	client := dynamodb.NewFromConfig(cfg)
+func ExampleBuilder_WithUpdate() {
+
+	// Using the SDK's default configuration, loading additional config
+	// and credentials values from the environment variables, shared
+	// credentials, and shared configuration files
+	cfg, err := configlocal.NewConfig(context.TODO())
+	if err != nil {
+		log.Fatalf("unable to load SDK config, %v", err)
+	}
+	// Using the Config value, create the DynamoDB client
+	client := dynamodb.NewFromConfig(cfg.AWSClient)
+
+	//client := dynamodb.NewFromConfig(cfg)
 
 	// Create an update to set two fields in the table.
 	update := expression.Set(
