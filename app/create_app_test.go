@@ -4,31 +4,27 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
+	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/expression"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
+	"github.com/jfonseca85/aws-sdk-dynamodb-expression/configlocal"
 )
 
-var config = struct {
-	LoadDefaultConfig func(ctx context.Context) (aws.Config, error)
-}{
-	LoadDefaultConfig: func(ctx context.Context) (aws.Config, error) {
-		return aws.Config{}, nil
-	},
-}
-
-func ExampleBuilder_WithUpdate() {
-	cfg, err := config.LoadDefaultConfig(context.TODO())
+func TestExampleBuilder_WithUpdate(t *testing.T) {
+	// Using the SDK's default configuration, loading additional config
+	// and credentials values from the environment variables, shared
+	// credentials, and shared configuration files
+	cfg, err := configlocal.NewConfig(context.TODO())
 	if err != nil {
-		fmt.Println(err.Error())
-		return
+		log.Fatalf("unable to load SDK config, %v", err)
 	}
+	// Using the Config value, create the DynamoDB client
+	client := dynamodb.NewFromConfig(cfg.AWSClient)
 
-	client := dynamodb.NewFromConfig(cfg)
-
-	// Create an update to set two fields in the table.
 	update := expression.Set(
 		expression.Name("Year"),
 		expression.Value(2015),
