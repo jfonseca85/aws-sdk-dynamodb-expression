@@ -1,4 +1,4 @@
-package expression_test
+package main
 
 import (
 	"context"
@@ -20,7 +20,7 @@ import (
 // modifies the AlbumTitle attribute.  All of the attributes in the item, as they appear
 // after the update, are returned in the response.
 
-func ExampleBuilder_WithUpdate() {
+func main() {
 
 	// Using the SDK's default configuration, loading additional config
 	// and credentials values from the environment variables, shared
@@ -32,16 +32,18 @@ func ExampleBuilder_WithUpdate() {
 	// Using the Config value, create the DynamoDB client
 	client := dynamodb.NewFromConfig(cfg.AWSClient)
 
-	//client := dynamodb.NewFromConfig(cfg)
-
-	// Create an update to set two fields in the table.
-	update := expression.Set(
-		expression.Name("Year"),
-		expression.Value(2015),
-	).Set(
-		expression.Name("AlbumTitle"),
-		expression.Value("Louder Than Ever"),
-	)
+	expressionMusic := map[string]interface{}{
+		"Estilo_musical": "Pagode",
+		"AlbumTitle":     "Pagode 2000",
+		"Year":           2003,
+		"Midia": struct {
+			tipo  string
+			price float64
+		}{"CD", 10.75},
+		"Spotify":    true,
+		"Dowanloads": 230000,
+	}
+	update := buildUpdateBuilder(expressionMusic)
 
 	// Create the DynamoDB expression from the Update.
 	expr, err := expression.NewBuilder().
@@ -81,4 +83,16 @@ func ExampleBuilder_WithUpdate() {
 	}
 
 	fmt.Println(result)
+}
+
+func buildUpdateBuilder(expressions map[string]interface{}) expression.UpdateBuilder {
+	var update expression.UpdateBuilder
+	for k, v := range expressions {
+		update = update.Set(
+			expression.Name(k),
+			expression.Value(v),
+		)
+
+	}
+	return update
 }

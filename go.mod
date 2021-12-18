@@ -1,6 +1,6 @@
-module aws-sdk-dynamodb-expression
+module github.com/jfonseca85/aws-sdk-dynamodb-expression
 
-replace aws-sdk-dynamodb-expression => ../aws-sdk-dynamodb-expression
+replace github.com/jfonseca85/aws-sdk-dynamodb-expression => ../aws-sdk-dynamodb-expression
 
 go 1.17
 
