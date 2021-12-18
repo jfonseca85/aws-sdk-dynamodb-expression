@@ -15,28 +15,6 @@ import (
 	"github.com/jfonseca85/aws-sdk-dynamodb-expression/configlocal"
 )
 
-func CreateAppParams() []*Param {
-
-	return []*Param{
-		{
-			Name:     argId,
-			Type:     "string",
-			Required: true,
-		},
-		{
-			Name:     argVersion,
-			Type:     "string",
-			Required: false,
-			Default:  "latest",
-		},
-		{
-			Name:     argDocument,
-			Type:     "yaml",
-			Required: true,
-		},
-	}
-}
-
 func CreateApp(args map[string]string) (string, error) {
 	log.Printf("Getting  CreateApp>>> ")
 
