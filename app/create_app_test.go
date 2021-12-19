@@ -38,7 +38,31 @@ func Test_CreateApp_Sending_Version(t *testing.T) {
 
 	//Validação
 	if err != nil {
-		fmt.Println("Erro durante Criação do App: ", err.Error())
+		t.Errorf("Erro durante Criação do App: %v/n ", err.Error())
 	}
-	fmt.Println("Erro durante Criação do App: ", result)
+	fmt.Println("App criado com sucesso: ", result)
+}
+
+func Test_CreateApp_Empty_Args(t *testing.T) {
+	//Cenário
+	args := map[string]string{}
+	//Ação
+	_, err := app.CreateApp(args)
+
+	//Validação
+	if err == nil {
+		t.Errorf("A CreateApp deverá retornar erro (Campo Id é ogrigatório)")
+	}
+}
+
+func Test_CreateApp_Null_Args(t *testing.T) {
+	//Cenário
+
+	//Ação
+	_, err := app.CreateApp(nil)
+
+	//Validação
+	if err == nil {
+		t.Errorf("A CreateApp deverá retornar erro (Campo Id é ogrigatório)")
+	}
 }
