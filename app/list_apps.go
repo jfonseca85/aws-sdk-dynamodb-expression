@@ -34,9 +34,7 @@ func ListApps(ctx context.Context, args map[string]string) (string, error) {
 		fmt.Println("Unable to list apps, " + err.Error())
 		return "", err
 	}
-
 	return buildResponse(out)
-
 }
 
 func buildScanInput() *dynamodb.ScanInput {
