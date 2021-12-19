@@ -1,7 +1,6 @@
 package app_test
 
 import (
-	"context"
 	"fmt"
 	"testing"
 
@@ -27,7 +26,6 @@ func Test_listApp_Sucess(t *testing.T) {
 
 func Test_listApp_Params_Null(t *testing.T) {
 	//Cenário: Cria args Null ( Estes args não são usados na consulta de App)
-	ctx := context.TODO()
 	ctx, cfg, err := app.InitClient()
 	if err != nil {
 		return
