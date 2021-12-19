@@ -23,6 +23,22 @@ func CreateApp(args map[string]string) (*Model, error) {
 
 }
 
+func CreateAppParams() []*Param {
+
+	return []*Param{
+		{
+			Name:     argId,
+			Type:     "string",
+			Required: true,
+		},
+		{
+			Name:     argDocument,
+			Type:     "yaml",
+			Required: true,
+		},
+	}
+}
+
 func UpdateAppMiddleware(args map[string]string) (*Model, error) {
 	cfg, err := configlocal.NewConfig(context.TODO())
 	if err != nil {

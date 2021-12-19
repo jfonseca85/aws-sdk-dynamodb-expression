@@ -43,6 +43,22 @@ func GetApp(ctx context.Context, args map[string]string) (*Model, error) {
 
 }
 
+func GetAppParams() []*Param {
+	return []*Param{
+		{
+			Name:     argId,
+			Type:     "string",
+			Required: true,
+		},
+		{
+			Name:     argVersion,
+			Type:     "string",
+			Required: false,
+			Default:  "latest",
+		},
+	}
+}
+
 func buildGetItemInput(id string, version string) (*dynamodb.GetItemInput, error) {
 	versionInput := version
 	if version == AttributeVersionLatestVersion {
