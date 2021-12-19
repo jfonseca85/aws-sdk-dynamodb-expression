@@ -15,3 +15,19 @@ func CreateAppParams() []*Param {
 		},
 	}
 }
+
+func GetAppParams() []*Param {
+	return []*Param{
+		{
+			Name:     argId,
+			Type:     "string",
+			Required: true,
+		},
+		{
+			Name:     argVersion,
+			Type:     "string",
+			Required: false,
+			Default:  "latest",
+		},
+	}
+}

@@ -43,7 +43,7 @@ func CreateApp(args map[string]string) (string, error) {
 
 	ret, err := json.Marshal(output)
 	if err != nil {
-		fmt.Println("Erro ao fazer o bind do response , " + err.Error())
+		fmt.Println("Erro ao fazer o bind do App, " + err.Error())
 		return "", err
 	}
 	return string(ret), nil
