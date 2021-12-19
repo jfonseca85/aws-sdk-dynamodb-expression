@@ -8,11 +8,8 @@ import (
 	"github.com/jfonseca85/aws-sdk-dynamodb-expression/app"
 )
 
-/*
-	Obtem o App pasando o ID e Version"
-*/
 func Test_GetApp_Sucess(t *testing.T) {
-	//Cenário
+	//Cenário: Cria args para obter o App (id: 1 e version: v3)
 	ctx := context.TODO()
 	args := map[string]string{
 		"id":      "1",
@@ -20,10 +17,10 @@ func Test_GetApp_Sucess(t *testing.T) {
 	}
 	expect := "v3"
 
-	//Ação
+	//Ação: Obtem o App
 	result, err := app.GetApp(ctx, args)
 
-	//Validação
+	//Validação: Valida o retorno do App (id: 1 e version: v3)
 	if err != nil {
 		t.Errorf("Erro ao obter oa App: %v/n", err.Error())
 	}
@@ -36,16 +33,16 @@ func Test_GetApp_Sucess(t *testing.T) {
 }
 
 func Test_GetApp_Missing_Version(t *testing.T) {
-	//Cenário
+	//Cenário: Cria args faltando version ( obrigatório )
 	ctx := context.TODO()
 	args := map[string]string{
 		"id": "1",
 	}
 
-	//Ação
+	//Ação: Obtém o App
 	result, err := app.GetApp(ctx, args)
 
-	//Validação
+	//Validação: Deverá retornar a última versão do App (id: 1)
 	if err != nil {
 		t.Errorf("Erro ao obter oa App: %v/n", err.Error())
 	}
@@ -57,36 +54,36 @@ func Test_GetApp_Missing_Version(t *testing.T) {
 }
 
 func Test_GetApp_Empty_Version(t *testing.T) {
-	//Cenário
+	//Cenário: Cria args com version vazia ( INCORRETO )
 	ctx := context.TODO()
 	args := map[string]string{
 		"id":      "1",
 		"version": "",
 	}
 
-	//Ação
+	//Ação: Obtem o App
 	result, err := app.GetApp(ctx, args)
 
-	//Validação
+	//Validação: Deverá retornar error, versão esta vazia
 	if err == nil {
-		t.Errorf("Deverá retornar error, versão não esta vazia")
+		t.Errorf("Deverá retornar error, versão esta vazia")
 	}
 	fmt.Println("App retornado: ", result)
 
 }
 
 func Test_GetApp_Incorret_Version(t *testing.T) {
-	//Cenário
+	//Cenário: Cria args com versão inexistente
 	ctx := context.TODO()
 	args := map[string]string{
 		"id":      "1",
 		"version": "gghgajsgj",
 	}
 
-	//Ação
+	//Ação: Obtém App
 	result, err := app.GetApp(ctx, args)
 
-	//Validação
+	//Validação: Deverá retornar vazia versão inexistente
 	if err != nil {
 		t.Errorf("Erro ao buscar o App %v/n", err.Error())
 	}
