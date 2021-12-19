@@ -17,6 +17,9 @@ O formato é baseado no [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 - [@jlfonseca](https://github.com/jfonseca85)
 
 ## [v1.0.1](https://github.com/jfonseca85/aws-sdk-dynamodb-expression/releases/tag/v1.0.1) - ????
+- Criação da operação de Update para o App
+- Testes unitários do update_app
+- Refatoração do create_app
 
 ### Corrigido
 
