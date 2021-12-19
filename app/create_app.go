@@ -26,6 +26,11 @@ func CreateApp(args map[string]string) (*Model, error) {
 		return nil, err
 	}
 
+	return UpdateAppMiddleware(args)
+
+}
+
+func UpdateAppMiddleware(args map[string]string) (*Model, error) {
 	cfg, err := configlocal.NewConfig(context.TODO())
 	if err != nil {
 		log.Fatalf("unable to load SDK config, %v", err)
@@ -35,7 +40,7 @@ func CreateApp(args map[string]string) (*Model, error) {
 	nextVersion := NextVersion(client, args["id"])
 	input := buildInput(args, nextVersion)
 
-	output, err := Update(client, input)
+	output, err := updateItem(client, input)
 	if err != nil {
 		fmt.Println("Erro no Update/Create App, " + err.Error())
 		return nil, err
@@ -46,16 +51,16 @@ func CreateApp(args map[string]string) (*Model, error) {
 		return nil, err
 	}
 	return ret, nil
-
 }
 
 func buildResponseCreate(out *dynamodb.UpdateItemOutput) (*Model, error) {
 	var response Model
 	err := attributevalue.UnmarshalMap(out.Attributes, &response)
+
 	return &response, err
 }
 
-func Update(clientDynamoDB *dynamodb.Client, input *dynamodb.UpdateItemInput) (*dynamodb.UpdateItemOutput, error) {
+func updateItem(clientDynamoDB *dynamodb.Client, input *dynamodb.UpdateItemInput) (*dynamodb.UpdateItemOutput, error) {
 	output, err := clientDynamoDB.UpdateItem(context.TODO(), input)
 	if err != nil {
 		return nil, err
