@@ -10,7 +10,7 @@ import (
 func Test_listApp_Sucess(t *testing.T) {
 	//Cenário: Cria args vazia ( Estes args não são usados na consulta de App)
 	args := map[string]string{}
-	ctx, cfg, err := app.InitClient()
+	ctx, cfg, err := NewClientLocal()
 	if err != nil {
 		return
 	}
@@ -26,7 +26,7 @@ func Test_listApp_Sucess(t *testing.T) {
 
 func Test_listApp_Params_Null(t *testing.T) {
 	//Cenário: Cria args Null ( Estes args não são usados na consulta de App)
-	ctx, cfg, err := app.InitClient()
+	ctx, cfg, err := NewClientLocal()
 	if err != nil {
 		return
 	}
@@ -45,7 +45,7 @@ func Test_listApp_With_Params(t *testing.T) {
 		"id":      "1",
 		"version": "v2",
 	}
-	ctx, cfg, err := app.InitClient()
+	ctx, cfg, err := NewClientLocal()
 	if err != nil {
 		return
 	}

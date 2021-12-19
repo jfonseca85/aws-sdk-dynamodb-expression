@@ -11,7 +11,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 
-	"github.com/jfonseca85/aws-sdk-dynamodb-expression/configlocal"
+	"github.com/jfonseca85/aws-sdk-dynamodb-expression/config"
 )
 
 // Using Update Expression
@@ -25,12 +25,12 @@ func main() {
 	// Using the SDK's default configuration, loading additional config
 	// and credentials values from the environment variables, shared
 	// credentials, and shared configuration files
-	cfg, err := configlocal.NewConfig(context.TODO())
+	cfg, err := config.NewConfig(context.TODO())
 	if err != nil {
 		log.Fatalf("unable to load SDK config, %v", err)
 	}
 	// Using the Config value, create the DynamoDB client
-	client := dynamodb.NewFromConfig(cfg.AWSClient)
+	client := dynamodb.NewFromConfig(cfg.AWSConfig)
 
 	expressionMusic := map[string]interface{}{
 		"Estilo_musical": "Pagode",

@@ -2,21 +2,29 @@ package app
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 
-	"github.com/jfonseca85/aws-sdk-dynamodb-expression/configlocal"
+	"github.com/jfonseca85/aws-sdk-dynamodb-expression/config"
 )
 
-func UpdateApp(ctx context.Context, cfg *configlocal.Viperloadconfig, args map[string]string) (*Model, error) {
+func UpdateApp(ctx context.Context, cfg *config.Config, args map[string]string) (string, error) {
 	fmt.Println("Invoke UpdateApp")
-	err := ValidateParams(args, updateAppParams())
+	err := ValidateParams(args, UpdateAppParams())
 	if err != nil {
-		return nil, err
+		return "", err
 	}
-	return UpdateAppMiddleware(ctx, cfg, args)
+	result, _ := UpdateAppMiddleware(ctx, cfg, args)
+
+	ret, err := json.Marshal(result)
+	if err != nil {
+		return "", err
+	}
+
+	return string(ret), nil
 }
 
-func updateAppParams() []*Param {
+func UpdateAppParams() []*Param {
 	return []*Param{
 		{
 			Name:     argId,

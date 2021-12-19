@@ -10,9 +10,5 @@ const (
 const (
 	AttributeVersionLatestVersion   string = "latest"
 	AttributeVersionReservedVersion string = "v0"
-)
-
-// Enum values for AttributeTableName
-const (
-	AttributeTableNameApp string = "dynamodb-table-app"
+	AppTable                               = "app.table"
 )

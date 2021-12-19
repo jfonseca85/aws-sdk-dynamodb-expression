@@ -2,44 +2,47 @@ package app
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
-	"github.com/jfonseca85/aws-sdk-dynamodb-expression/configlocal"
+	"github.com/jfonseca85/aws-sdk-dynamodb-expression/config"
 )
 
-func GetApp(ctx context.Context, args map[string]string) (*Model, error) {
+func GetApp(ctx context.Context, cfg *config.Config, args map[string]string) (string, error) {
 	fmt.Println("Invoke GetApp")
 
 	err := ValidateParams(args, GetAppParams())
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
-	cfg, err := configlocal.NewConfig(context.TODO())
-	if err != nil {
-		return nil, err
-	}
-	client := dynamodb.NewFromConfig(cfg.AWSClient)
+	client := NewClient(cfg)
 
-	getItemInput, err := buildGetItemInput(args["id"], args["version"])
+	getItemInput, err := buildGetItemInput(ctx, cfg, args["id"], args["version"])
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
 	output, err := client.GetItem(ctx, getItemInput)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
-	response, err := buildResponseGet(output)
+	result, err := buildResponseGet(output)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
-	return response, nil
+
+	ret, err := json.Marshal(result)
+	if err != nil {
+		return "", err
+	}
+
+	return string(ret), nil
 
 }
 
@@ -59,10 +62,10 @@ func GetAppParams() []*Param {
 	}
 }
 
-func buildGetItemInput(id string, version string) (*dynamodb.GetItemInput, error) {
+func buildGetItemInput(ctx context.Context, cfg *config.Config, id string, version string) (*dynamodb.GetItemInput, error) {
 	versionInput := version
 	if version == AttributeVersionLatestVersion {
-		lastedVersion, err := getLastedVersion(id)
+		lastedVersion, err := getLastedVersion(ctx, cfg, id)
 		if err != nil {
 			return nil, err
 		}
@@ -70,7 +73,7 @@ func buildGetItemInput(id string, version string) (*dynamodb.GetItemInput, error
 	}
 
 	return &dynamodb.GetItemInput{
-		TableName: aws.String(AttributeTableNameApp),
+		TableName: aws.String(cfg.Viper.GetString(AppTable)),
 		Key: map[string]types.AttributeValue{
 			"id":      &types.AttributeValueMemberS{Value: id},
 			"version": &types.AttributeValueMemberS{Value: versionInput},
@@ -84,15 +87,10 @@ func buildResponseGet(out *dynamodb.GetItemOutput) (*Model, error) {
 	return &response, err
 }
 
-func getLastedVersion(id string) (string, error) {
-	cfg, err := configlocal.NewConfig(context.TODO())
-	if err != nil {
-		return "", err
-	}
-	client := dynamodb.NewFromConfig(cfg.AWSClient)
-
+func getLastedVersion(ctx context.Context, cfg *config.Config, id string) (string, error) {
+	client := NewClient(cfg)
 	input := dynamodb.GetItemInput{
-		TableName: aws.String(AttributeTableNameApp),
+		TableName: aws.String(cfg.Viper.GetString(AppTable)),
 		Key: map[string]types.AttributeValue{
 			"id":      &types.AttributeValueMemberS{Value: id},
 			"version": &types.AttributeValueMemberS{Value: AttributeVersionReservedVersion},

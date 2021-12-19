@@ -14,7 +14,7 @@ func Test_CreateApp_Sucess(t *testing.T) {
 		"document": "QVdTVGVtcGxhdGVGb3JtYXRWZXJzaW9uOiAnMjAxMC0wOS0wOScKUmVzb3VyY2VzOgogIG15U3RhY2s6CiAgICBUeXBlOiBBV1M6OkNsb3VkRm9ybWF0aW9uOjpTdGFjawogICAgUHJvcGVydGllczoKICAgICAgVGVtcGxhdGVVUkw6IGh0dHBzOi8vczMuYW1hem9uYXdzLmNvbS9jbG91ZGZvcm1hdGlvbi10ZW1wbGF0ZXMtdXMtZWFzdC0xL1MzX0J1Y2tldC50ZW1wbGF0ZQogICAgICBUaW1lb3V0SW5NaW51dGVzOiAnNjAnCk91dHB1dHM6CiAgU3RhY2tSZWY6CiAgICBWYWx1ZTogIVJlZiBteVN0YWNrCiAgT3V0cHV0RnJvbU5lc3RlZFN0YWNrOgogICAgVmFsdWU6ICFHZXRBdHQgbXlTdGFjay5PdXRwdXRzLkJ1Y2tldE5hbWU=",
 	}
 
-	ctx, cfg, err := app.InitClient()
+	ctx, cfg, err := NewClientLocal()
 	if err != nil {
 		return
 	}
@@ -40,7 +40,7 @@ func Test_CreateApp_Sending_Version(t *testing.T) {
 		"document": "QVdTVGVtcGxhdGVGb3JtYXRWZXJzaW9uOiAnMjAxMC0wOS0wOScKUmVzb3VyY2VzOgogIG15U3RhY2s6CiAgICBUeXBlOiBBV1M6OkNsb3VkRm9ybWF0aW9uOjpTdGFjawogICAgUHJvcGVydGllczoKICAgICAgVGVtcGxhdGVVUkw6IGh0dHBzOi8vczMuYW1hem9uYXdzLmNvbS9jbG91ZGZvcm1hdGlvbi10ZW1wbGF0ZXMtdXMtZWFzdC0xL1MzX0J1Y2tldC50ZW1wbGF0ZQogICAgICBUaW1lb3V0SW5NaW51dGVzOiAnNjAnCk91dHB1dHM6CiAgU3RhY2tSZWY6CiAgICBWYWx1ZTogIVJlZiBteVN0YWNrCiAgT3V0cHV0RnJvbU5lc3RlZFN0YWNrOgogICAgVmFsdWU6ICFHZXRBdHQgbXlTdGFjay5PdXRwdXRzLkJ1Y2tldE5hbWU=",
 	}
 
-	ctx, cfg, err := app.InitClient()
+	ctx, cfg, err := NewClientLocal()
 	if err != nil {
 		return
 	}
@@ -59,7 +59,7 @@ func Test_CreateApp_Empty_Args(t *testing.T) {
 	//Cenário: Cria args vazia
 	args := map[string]string{}
 
-	ctx, cfg, err := app.InitClient()
+	ctx, cfg, err := NewClientLocal()
 	if err != nil {
 		return
 	}
@@ -74,7 +74,7 @@ func Test_CreateApp_Empty_Args(t *testing.T) {
 
 func Test_CreateApp_Null_Args(t *testing.T) {
 	//Cenário:
-	ctx, cfg, err := app.InitClient()
+	ctx, cfg, err := NewClientLocal()
 	if err != nil {
 		return
 	}

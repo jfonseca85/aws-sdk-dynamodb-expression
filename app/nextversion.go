@@ -7,12 +7,12 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
+	"github.com/jfonseca85/aws-sdk-dynamodb-expression/config"
 )
 
-func NextVersion(clientDynamoDB *dynamodb.Client, id string) string {
-	//Função criada para retornar a próxima versão do App, cada atualização feita incrementará um versão
+func NextVersion(cfg *config.Config, clientDynamoDB *dynamodb.Client, id string) string {
 	input := &dynamodb.UpdateItemInput{
-		TableName: aws.String(AttributeTableNameApp),
+		TableName: aws.String(cfg.Viper.GetString(AppTable)),
 		Key: map[string]types.AttributeValue{
 			"id":      &types.AttributeValueMemberS{Value: id},
 			"version": &types.AttributeValueMemberS{Value: AttributeVersionReservedVersion},

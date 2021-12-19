@@ -12,14 +12,10 @@ import (
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
-	"github.com/jfonseca85/aws-sdk-dynamodb-expression/configlocal"
+	"github.com/jfonseca85/aws-sdk-dynamodb-expression/config"
 )
 
-func ListAppsParams() []*Param {
-	return []*Param{}
-}
-
-func ListApps(ctx context.Context, cfg *configlocal.Viperloadconfig, args map[string]string) (string, error) {
+func ListApps(ctx context.Context, cfg *config.Config, args map[string]string) (string, error) {
 	fmt.Println("Invoke ListApps")
 
 	err := ValidateParams(args, ListAppsParams())
@@ -30,7 +26,7 @@ func ListApps(ctx context.Context, cfg *configlocal.Viperloadconfig, args map[st
 	// Using the Config value, create the DynamoDB client
 	client := NewClient(cfg)
 
-	out, err := listApps(client, buildScanInput())
+	out, err := listApps(client, buildScanInput(cfg))
 	if err != nil {
 		fmt.Println("Unable to list apps, " + err.Error())
 		return "", err
@@ -38,10 +34,13 @@ func ListApps(ctx context.Context, cfg *configlocal.Viperloadconfig, args map[st
 	return buildResponse(out)
 }
 
-func buildScanInput() *dynamodb.ScanInput {
-	// Build the input parameters for the request.
+func ListAppsParams() []*Param {
+	return []*Param{}
+}
+
+func buildScanInput(cfg *config.Config) *dynamodb.ScanInput {
 	input := &dynamodb.ScanInput{
-		TableName:        aws.String("dynamodb-table-app"),
+		TableName:        aws.String(cfg.Viper.GetString(AppTable)),
 		FilterExpression: aws.String("#version <> :version"),
 		ExpressionAttributeNames: map[string]string{
 			"#version": "version",

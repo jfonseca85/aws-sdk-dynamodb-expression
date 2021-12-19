@@ -15,7 +15,7 @@ func Test_UpdateApp_Sucess(t *testing.T) {
 		"xpto":     "value_xpto",
 		"document": "QVdTVGVtcGxhdGVGb3JtYXRWZXJzaW9uOiAnMjAxMC0wOS0wOScKUmVzb3VyY2VzOgogIG15U3RhY2s6CiAgICBUeXBlOiBBV1M6OkNsb3VkRm9ybWF0aW9uOjpTdGFjawogICAgUHJvcGVydGllczoKICAgICAgVGVtcGxhdGVVUkw6IGh0dHBzOi8vczMuYW1hem9uYXdzLmNvbS9jbG91ZGZvcm1hdGlvbi10ZW1wbGF0ZXMtdXMtZWFzdC0xL1MzX0J1Y2tldC50ZW1wbGF0ZQogICAgICBUaW1lb3V0SW5NaW51dGVzOiAnNjAnCk91dHB1dHM6CiAgU3RhY2tSZWY6CiAgICBWYWx1ZTogIVJlZiBteVN0YWNrCiAgT3V0cHV0RnJvbU5lc3RlZFN0YWNrOgogICAgVmFsdWU6ICFHZXRBdHQgbXlTdGFjay5PdXRwdXRzLkJ1Y2tldE5hbWU=",
 	}
-	ctx, cfg, err := app.InitClient()
+	ctx, cfg, err := NewClientLocal()
 	if err != nil {
 		return
 	}
@@ -37,7 +37,7 @@ func Test_UpdateApp_Version_Missing(t *testing.T) {
 		"xpto":     "value_xpto",
 		"document": "QVdTVGVtcGxhdGVGb3JtYXRWZXJzaW9uOiAnMjAxMC0wOS0wOScKUmVzb3VyY2VzOgogIG15U3RhY2s6CiAgICBUeXBlOiBBV1M6OkNsb3VkRm9ybWF0aW9uOjpTdGFjawogICAgUHJvcGVydGllczoKICAgICAgVGVtcGxhdGVVUkw6IGh0dHBzOi8vczMuYW1hem9uYXdzLmNvbS9jbG91ZGZvcm1hdGlvbi10ZW1wbGF0ZXMtdXMtZWFzdC0xL1MzX0J1Y2tldC50ZW1wbGF0ZQogICAgICBUaW1lb3V0SW5NaW51dGVzOiAnNjAnCk91dHB1dHM6CiAgU3RhY2tSZWY6CiAgICBWYWx1ZTogIVJlZiBteVN0YWNrCiAgT3V0cHV0RnJvbU5lc3RlZFN0YWNrOgogICAgVmFsdWU6ICFHZXRBdHQgbXlTdGFjay5PdXRwdXRzLkJ1Y2tldE5hbWU=",
 	}
-	ctx, cfg, err := app.InitClient()
+	ctx, cfg, err := NewClientLocal()
 	if err != nil {
 		return
 	}
@@ -59,7 +59,7 @@ func Test_UpdateApp_Id_Missing(t *testing.T) {
 		"xpto":     "value_xpto",
 		"document": "QVdTVGVtcGxhdGVGb3JtYXRWZXJzaW9uOiAnMjAxMC0wOS0wOScKUmVzb3VyY2VzOgogIG15U3RhY2s6CiAgICBUeXBlOiBBV1M6OkNsb3VkRm9ybWF0aW9uOjpTdGFjawogICAgUHJvcGVydGllczoKICAgICAgVGVtcGxhdGVVUkw6IGh0dHBzOi8vczMuYW1hem9uYXdzLmNvbS9jbG91ZGZvcm1hdGlvbi10ZW1wbGF0ZXMtdXMtZWFzdC0xL1MzX0J1Y2tldC50ZW1wbGF0ZQogICAgICBUaW1lb3V0SW5NaW51dGVzOiAnNjAnCk91dHB1dHM6CiAgU3RhY2tSZWY6CiAgICBWYWx1ZTogIVJlZiBteVN0YWNrCiAgT3V0cHV0RnJvbU5lc3RlZFN0YWNrOgogICAgVmFsdWU6ICFHZXRBdHQgbXlTdGFjay5PdXRwdXRzLkJ1Y2tldE5hbWU=",
 	}
-	ctx, cfg, err := app.InitClient()
+	ctx, cfg, err := NewClientLocal()
 	if err != nil {
 		return
 	}
@@ -80,7 +80,7 @@ func Test_UpdateApp_Id_And_Version_Missing(t *testing.T) {
 		"xpto":     "value_xpto",
 		"document": "QVdTVGVtcGxhdGVGb3JtYXRWZXJzaW9uOiAnMjAxMC0wOS0wOScKUmVzb3VyY2VzOgogIG15U3RhY2s6CiAgICBUeXBlOiBBV1M6OkNsb3VkRm9ybWF0aW9uOjpTdGFjawogICAgUHJvcGVydGllczoKICAgICAgVGVtcGxhdGVVUkw6IGh0dHBzOi8vczMuYW1hem9uYXdzLmNvbS9jbG91ZGZvcm1hdGlvbi10ZW1wbGF0ZXMtdXMtZWFzdC0xL1MzX0J1Y2tldC50ZW1wbGF0ZQogICAgICBUaW1lb3V0SW5NaW51dGVzOiAnNjAnCk91dHB1dHM6CiAgU3RhY2tSZWY6CiAgICBWYWx1ZTogIVJlZiBteVN0YWNrCiAgT3V0cHV0RnJvbU5lc3RlZFN0YWNrOgogICAgVmFsdWU6ICFHZXRBdHQgbXlTdGFjay5PdXRwdXRzLkJ1Y2tldE5hbWU=",
 	}
-	ctx, cfg, err := app.InitClient()
+	ctx, cfg, err := NewClientLocal()
 	if err != nil {
 		return
 	}
@@ -98,7 +98,7 @@ func Test_UpdateApp_Id_And_Version_Missing(t *testing.T) {
 func Test_UpdateApp_Params_Empty(t *testing.T) {
 	//Cenário: Criar args faltando os campos id  e version são obrigatórios
 	args := map[string]string{}
-	ctx, cfg, err := app.InitClient()
+	ctx, cfg, err := NewClientLocal()
 	if err != nil {
 		return
 	}
@@ -115,7 +115,7 @@ func Test_UpdateApp_Params_Empty(t *testing.T) {
 
 func Test_UpdateApp_Params_Null(t *testing.T) {
 	//Cenário: Criar args faltando os campos id  e version são obrigatórios
-	ctx, cfg, err := app.InitClient()
+	ctx, cfg, err := NewClientLocal()
 	if err != nil {
 		return
 	}

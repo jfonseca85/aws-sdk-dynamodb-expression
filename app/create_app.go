@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -9,18 +10,23 @@ import (
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/expression"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
-	"github.com/jfonseca85/aws-sdk-dynamodb-expression/configlocal"
+	"github.com/jfonseca85/aws-sdk-dynamodb-expression/config"
 )
 
-func CreateApp(ctx context.Context, cfg *configlocal.Viperloadconfig, args map[string]string) (*Model, error) {
+func CreateApp(ctx context.Context, cfg *config.Config, args map[string]string) (string, error) {
 	fmt.Println("Invoke CreateApp")
 	err := ValidateParams(args, CreateAppParams())
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
-	return UpdateAppMiddleware(ctx, cfg, args)
+	result, _ := UpdateAppMiddleware(ctx, cfg, args)
+	ret, err := json.Marshal(result)
+	if err != nil {
+		return "", err
+	}
 
+	return string(ret), nil
 }
 
 func CreateAppParams() []*Param {
@@ -39,19 +45,12 @@ func CreateAppParams() []*Param {
 	}
 }
 
-func UpdateAppMiddleware(ctx context.Context, cfg *configlocal.Viperloadconfig, args map[string]string) (*Model, error) {
-	/*
-		cfg, err := configlocal.NewConfig(context.TODO())
-		if err != nil {
-			return nil, err
-		}
+func UpdateAppMiddleware(ctx context.Context, cfg *config.Config, args map[string]string) (*Model, error) {
 
-		client := dynamodb.NewFromConfig(cfg.AWSClient)
-	*/
 	client := NewClient(cfg)
 
-	nextVersion := NextVersion(client, args["id"])
-	input := buildInput(args, nextVersion)
+	nextVersion := NextVersion(cfg, client, args["id"])
+	input := buildInput(cfg, args, nextVersion)
 
 	output, err := updateItem(client, input)
 	if err != nil {
@@ -80,9 +79,8 @@ func updateItem(clientDynamoDB *dynamodb.Client, input *dynamodb.UpdateItemInput
 	return output, nil
 }
 
-func buildInput(args map[string]string, nextVersion string) *dynamodb.UpdateItemInput {
+func buildInput(cfg *config.Config, args map[string]string, nextVersion string) *dynamodb.UpdateItemInput {
 	update := buildUpdateBuilder(args)
-	// Create the DynamoDB expression from the Update.
 	expr, err := expression.NewBuilder().
 		WithUpdate(update).
 		Build()
@@ -91,14 +89,13 @@ func buildInput(args map[string]string, nextVersion string) *dynamodb.UpdateItem
 	}
 
 	result := &dynamodb.UpdateItemInput{
-		TableName:                 aws.String(AttributeTableNameApp),
+		TableName:                 aws.String(cfg.Viper.GetString(AppTable)),
 		ExpressionAttributeNames:  expr.Names(),
 		ExpressionAttributeValues: expr.Values(),
 		Key: map[string]types.AttributeValue{
 			"id":      &types.AttributeValueMemberS{Value: args["id"]},
 			"version": &types.AttributeValueMemberS{Value: nextVersion},
 		},
-		//UpdateExpression: aws.String("SET Latest = if_not_exists(Latest, :defaultval) + :incrval, #ArnAsf= :asf_value, #Status = :status_value, #Document = :document_value"),
 		UpdateExpression: expr.Update(),
 		ReturnValues:     types.ReturnValueAllNew,
 	}
@@ -116,8 +113,5 @@ func buildUpdateBuilder(expressions map[string]string) expression.UpdateBuilder 
 			expression.Value(v),
 		)
 	}
-	//UpdateExpression: aws.String("SET Latest = if_not_exists(Latest, :defaultval) + :incrval,
-	//update = update.Set(expression.Name("Latest"), expression.IfNotExists(expression.Name("Latest"), expression.Value(0)))
-	//update = update.Set(expression.Name("Latest"), expression.Plus(expression.Name("Latest"), expression.IfNotExists(expression.Name("Latest"), expression.Value(0)), expression.Value(1)))
 	return update
 }

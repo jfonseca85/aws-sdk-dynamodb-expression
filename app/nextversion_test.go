@@ -12,7 +12,7 @@ func Test_NextVersion(t *testing.T) {
 	//A Nova Versão deve ser incrementada em 1 (Ex.: Versão atual: v3, Nova Versão: v4)
 
 	//Cenario: Cria o id do App
-	_, cfg, err := app.InitClient()
+	_, cfg, err := NewClientLocal()
 	if err != nil {
 		return
 	}
@@ -20,7 +20,7 @@ func Test_NextVersion(t *testing.T) {
 
 	idTable := "1"
 	//Ação: Obtem nova Versão
-	nextVersion := app.NextVersion(client, idTable)
+	nextVersion := app.NextVersion(cfg, client, idTable)
 	fmt.Printf("Exibindo a nova versão do App: %q/n", nextVersion)
 
 	//Validação:

@@ -1,4 +1,4 @@
-package configlocal
+package config
 
 import (
 	"context"
