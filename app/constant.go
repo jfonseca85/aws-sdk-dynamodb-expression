@@ -1,21 +1,9 @@
 package app
 
 const (
-	argId            = "id"
-	argVersion       = "version"
-	argDocument      = "document"
-	StatusReady      = "READY"
-	StatusProcessing = "PROCESSING"
-	StatusError      = "ERROR"
-	LatestVersion    = "latest"
-	ReservedVersion  = "v0"
-)
-
-// Enum values for AttributeStatus
-const (
-	AttributeStatusReady      string = "READY"
-	AttributeStatusProcessing string = "PROCESSING"
-	AttributeStatusError      string = "ERROR"
+	argId       = "id"
+	argVersion  = "version"
+	argDocument = "document"
 )
 
 // Enum values for AttributeVersion
