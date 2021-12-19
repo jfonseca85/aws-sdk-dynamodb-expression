@@ -8,12 +8,12 @@ import (
 	"github.com/spf13/viper"
 )
 
-type viperloadconfig struct {
+type Viperloadconfig struct {
 	Viper     *viper.Viper
 	AWSClient aws.Config
 }
 
-func NewConfig(ctx context.Context) (*viperloadconfig, error) {
+func NewConfig(ctx context.Context) (*Viperloadconfig, error) {
 	viper.AddConfigPath(".")  // to work on dev and production envs
 	viper.AddConfigPath("./") // to work on dev and production envs
 	viper.SetConfigName("env")
@@ -32,7 +32,7 @@ func NewConfig(ctx context.Context) (*viperloadconfig, error) {
 		return nil, err
 	}
 
-	return &viperloadconfig{
+	return &Viperloadconfig{
 		Viper:     viper.GetViper(),
 		AWSClient: awsconfig,
 	}, nil

@@ -1,16 +1,19 @@
 package app
 
 import (
+	"context"
 	"fmt"
+
+	"github.com/jfonseca85/aws-sdk-dynamodb-expression/configlocal"
 )
 
-func UpdateApp(args map[string]string) (*Model, error) {
+func UpdateApp(ctx context.Context, cfg *configlocal.Viperloadconfig, args map[string]string) (*Model, error) {
 	fmt.Println("Invoke UpdateApp")
 	err := ValidateParams(args, updateAppParams())
 	if err != nil {
 		return nil, err
 	}
-	return UpdateAppMiddleware(args)
+	return UpdateAppMiddleware(ctx, cfg, args)
 }
 
 func updateAppParams() []*Param {

@@ -12,14 +12,14 @@ import (
 	"github.com/jfonseca85/aws-sdk-dynamodb-expression/configlocal"
 )
 
-func CreateApp(args map[string]string) (*Model, error) {
+func CreateApp(ctx context.Context, cfg *configlocal.Viperloadconfig, args map[string]string) (*Model, error) {
 	fmt.Println("Invoke CreateApp")
 	err := ValidateParams(args, CreateAppParams())
 	if err != nil {
 		return nil, err
 	}
 
-	return UpdateAppMiddleware(args)
+	return UpdateAppMiddleware(ctx, cfg, args)
 
 }
 
@@ -39,13 +39,17 @@ func CreateAppParams() []*Param {
 	}
 }
 
-func UpdateAppMiddleware(args map[string]string) (*Model, error) {
-	cfg, err := configlocal.NewConfig(context.TODO())
-	if err != nil {
-		return nil, err
-	}
+func UpdateAppMiddleware(ctx context.Context, cfg *configlocal.Viperloadconfig, args map[string]string) (*Model, error) {
+	/*
+		cfg, err := configlocal.NewConfig(context.TODO())
+		if err != nil {
+			return nil, err
+		}
 
-	client := dynamodb.NewFromConfig(cfg.AWSClient)
+		client := dynamodb.NewFromConfig(cfg.AWSClient)
+	*/
+	client := NewClient(cfg)
+
 	nextVersion := NextVersion(client, args["id"])
 	input := buildInput(args, nextVersion)
 

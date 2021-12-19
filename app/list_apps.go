@@ -12,13 +12,14 @@ import (
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
+	"github.com/jfonseca85/aws-sdk-dynamodb-expression/configlocal"
 )
 
 func ListAppsParams() []*Param {
 	return []*Param{}
 }
 
-func ListApps(ctx context.Context, args map[string]string) (string, error) {
+func ListApps(ctx context.Context, cfg *configlocal.Viperloadconfig, args map[string]string) (string, error) {
 	fmt.Println("Invoke ListApps")
 
 	err := ValidateParams(args, ListAppsParams())
@@ -27,7 +28,7 @@ func ListApps(ctx context.Context, args map[string]string) (string, error) {
 	}
 
 	// Using the Config value, create the DynamoDB client
-	client := InitClient()
+	client := NewClient(cfg)
 
 	out, err := listApps(client, buildScanInput())
 	if err != nil {
