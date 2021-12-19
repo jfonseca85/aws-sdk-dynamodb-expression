@@ -8,12 +8,17 @@ import (
 )
 
 func Test_NextVersion(t *testing.T) {
-	//TODO: Fazer um GET pegando a última versão depois executa o NextVersion
+
 	//A Nova Versão deve ser incrementada em 1 (Ex.: Versão atual: v3, Nova Versão: v4)
-	//Cenario
+
+	//Cenario: Cria o id do App
 	client := app.InitClient()
 	idTable := "1"
+	//Ação: Obtem nova Versão
 	nextVersion := app.NextVersion(client, idTable)
 	fmt.Printf("Exibindo a nova versão do App: %q/n", nextVersion)
+
+	//Validação:
+	//TODO: (Jorge Luis) Fazer um GET pegando a última versão depois executa o NextVersion
 
 }
