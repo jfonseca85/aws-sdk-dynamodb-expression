@@ -44,7 +44,7 @@ func GetApp(ctx context.Context, args map[string]string) (*Model, error) {
 }
 
 func buildGetItemInput(id string, version string) (*dynamodb.GetItemInput, error) {
-	versionInput := id
+	versionInput := version
 	if version == AttributeVersionLatestVersion {
 		lastedVersion, err := getLastedVersion(id)
 		if err != nil {
