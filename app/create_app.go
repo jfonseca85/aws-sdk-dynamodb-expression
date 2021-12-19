@@ -6,7 +6,6 @@ package app
 import (
 	"context"
 	"fmt"
-	"log"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
@@ -18,11 +17,8 @@ import (
 
 func CreateApp(args map[string]string) (*Model, error) {
 	fmt.Println("Invoke CreateApp")
-
-	fmt.Println("Invoke ValidateParams")
 	err := ValidateParams(args, CreateAppParams())
 	if err != nil {
-		fmt.Println("Erro durante a validação do parametros: ", err.Error())
 		return nil, err
 	}
 
@@ -33,7 +29,7 @@ func CreateApp(args map[string]string) (*Model, error) {
 func UpdateAppMiddleware(args map[string]string) (*Model, error) {
 	cfg, err := configlocal.NewConfig(context.TODO())
 	if err != nil {
-		log.Fatalf("unable to load SDK config, %v", err)
+		return nil, err
 	}
 
 	client := dynamodb.NewFromConfig(cfg.AWSClient)
@@ -42,10 +38,9 @@ func UpdateAppMiddleware(args map[string]string) (*Model, error) {
 
 	output, err := updateItem(client, input)
 	if err != nil {
-		fmt.Println("Erro no Update/Create App, " + err.Error())
 		return nil, err
 	}
-	//TODO(Jorge Luis): Retornar o model App no formato Json
+
 	ret, err := buildResponseCreate(output)
 	if err != nil {
 		return nil, err
