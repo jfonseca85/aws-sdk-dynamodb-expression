@@ -10,36 +10,32 @@ import (
 	"log"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/expression"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"github.com/jfonseca85/aws-sdk-dynamodb-expression/configlocal"
 )
 
 func CreateApp(args map[string]string) (string, error) {
-	log.Printf("Getting  CreateApp>>> ")
+	fmt.Println("Invoke CreateApp")
 
+	fmt.Println("Invoke ValidateParams")
 	err := ValidateParams(args, CreateAppParams())
-
 	if err != nil {
+		fmt.Println("Erro durante a validação do parametros: ", err.Error())
 		return "", err
 	}
 
-	body := &Model{
-		ID:       args[argId],
-		Version:  args[argVersion],
-		Document: args[argDocument],
-	}
-
-	//client := config.AWSClient.DynamoDB()
 	cfg, err := configlocal.NewConfig(context.TODO())
 	if err != nil {
 		log.Fatalf("unable to load SDK config, %v", err)
 	}
-	// Using the Config value, create the DynamoDB client
-	client := dynamodb.NewFromConfig(cfg.AWSClient)
-	NextVersion(client, body.ID)
 
-	output, err := Update(client, body)
+	client := dynamodb.NewFromConfig(cfg.AWSClient)
+	nextVersion := NextVersion(client, args["id"])
+	input := buildInput(args, nextVersion)
+
+	output, err := Update(client, input)
 	if err != nil {
 		fmt.Println("Erro no Update/Create App, " + err.Error())
 		return "", err
@@ -54,11 +50,7 @@ func CreateApp(args map[string]string) (string, error) {
 
 }
 
-func Update(clientDynamoDB *dynamodb.Client, model *Model) (*dynamodb.UpdateItemOutput, error) {
-	log.Printf("Chamando o app.Update>>> ")
-
-	input := buildInput(model)
-
+func Update(clientDynamoDB *dynamodb.Client, input *dynamodb.UpdateItemInput) (*dynamodb.UpdateItemOutput, error) {
 	output, err := clientDynamoDB.UpdateItem(context.TODO(), input)
 	if err != nil {
 		return nil, err
@@ -66,27 +58,44 @@ func Update(clientDynamoDB *dynamodb.Client, model *Model) (*dynamodb.UpdateItem
 	return output, nil
 }
 
-func buildInput(model *Model) *dynamodb.UpdateItemInput {
+func buildInput(args map[string]string, nextVersion string) *dynamodb.UpdateItemInput {
+	update := buildUpdateBuilder(args)
+	// Create the DynamoDB expression from the Update.
+	expr, err := expression.NewBuilder().
+		WithUpdate(update).
+		Build()
+	if err != nil {
+		fmt.Println(err)
+	}
+
 	result := &dynamodb.UpdateItemInput{
-		TableName: aws.String(AttributeTableNameApp),
+		TableName:                 aws.String(AttributeTableNameApp),
+		ExpressionAttributeNames:  expr.Names(),
+		ExpressionAttributeValues: expr.Values(),
 		Key: map[string]types.AttributeValue{
-			"ID":      &types.AttributeValueMemberS{Value: model.ID},
-			"Version": &types.AttributeValueMemberS{Value: model.Version},
+			"id":      &types.AttributeValueMemberS{Value: args["id"]},
+			"version": &types.AttributeValueMemberS{Value: nextVersion},
 		},
-		UpdateExpression: aws.String("SET Latest = if_not_exists(Latest, :defaultval) + :incrval, #ArnAsf= :asf_value, #Status = :status_value, #Document = :document_value"),
-		ExpressionAttributeNames: map[string]string{
-			"#ArnAsf":   "ArnAsf",
-			"#Status":   "Status",
-			"#Document": "Document",
-		},
-		ExpressionAttributeValues: map[string]types.AttributeValue{
-			":defaultval":     &types.AttributeValueMemberN{Value: "0"},
-			":incrval":        &types.AttributeValueMemberN{Value: "1"},
-			":asf_value":      &types.AttributeValueMemberS{Value: model.ArnAsf},
-			":status_value":   &types.AttributeValueMemberS{Value: model.Status},
-			":document_value": &types.AttributeValueMemberS{Value: model.Document},
-		},
-		ReturnValues: types.ReturnValueAllNew,
+		//UpdateExpression: aws.String("SET Latest = if_not_exists(Latest, :defaultval) + :incrval, #ArnAsf= :asf_value, #Status = :status_value, #Document = :document_value"),
+		UpdateExpression: expr.Update(),
+		ReturnValues:     types.ReturnValueAllNew,
 	}
 	return result
+}
+
+func buildUpdateBuilder(expressions map[string]string) expression.UpdateBuilder {
+	var update expression.UpdateBuilder
+	for k, v := range expressions {
+		if k == "id" || k == "version" {
+			continue
+		}
+		update = update.Set(
+			expression.Name(k),
+			expression.Value(v),
+		)
+	}
+	//UpdateExpression: aws.String("SET Latest = if_not_exists(Latest, :defaultval) + :incrval,
+	//update = update.Set(expression.Name("Latest"), expression.IfNotExists(expression.Name("Latest"), expression.Value(0)))
+	//update = update.Set(expression.Name("Latest"), expression.Plus(expression.Name("Latest"), expression.IfNotExists(expression.Name("Latest"), expression.Value(0)), expression.Value(1)))
+	return update
 }

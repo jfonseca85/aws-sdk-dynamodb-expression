@@ -4,10 +4,10 @@ echo $(date) # Will print the output of date command
 aws dynamodb create-table \
     --table-name dynamodb-table-app \
     --attribute-definitions \
-        AttributeName=ID,AttributeType=S \
-        AttributeName=Version,AttributeType=S \
+        AttributeName=id,AttributeType=S \
+        AttributeName=version,AttributeType=S \
     --key-schema \
-        AttributeName=ID,KeyType=HASH \
-        AttributeName=Version,KeyType=RANGE \
+        AttributeName=id,KeyType=HASH \
+        AttributeName=version,KeyType=RANGE \
 --provisioned-throughput \
         ReadCapacityUnits=10,WriteCapacityUnits=5

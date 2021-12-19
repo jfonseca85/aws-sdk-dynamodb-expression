@@ -9,12 +9,6 @@ func CreateAppParams() []*Param {
 			Required: true,
 		},
 		{
-			Name:     argVersion,
-			Type:     "string",
-			Required: false,
-			Default:  "latest",
-		},
-		{
 			Name:     argDocument,
 			Type:     "yaml",
 			Required: true,

@@ -14,8 +14,8 @@ func NextVersion(clientDynamoDB *dynamodb.Client, id string) string {
 	input := &dynamodb.UpdateItemInput{
 		TableName: aws.String(AttributeTableNameApp),
 		Key: map[string]types.AttributeValue{
-			"ID":      &types.AttributeValueMemberS{Value: id},
-			"Version": &types.AttributeValueMemberS{Value: AttributeVersionReservedVersion},
+			"id":      &types.AttributeValueMemberS{Value: id},
+			"version": &types.AttributeValueMemberS{Value: AttributeVersionReservedVersion},
 		},
 		UpdateExpression: aws.String("SET Latest = if_not_exists(Latest, :defaultval) + :incrval"),
 		ExpressionAttributeValues: map[string]types.AttributeValue{

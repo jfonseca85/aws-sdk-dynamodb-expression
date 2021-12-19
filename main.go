@@ -35,7 +35,7 @@ func main() {
 	expressionMusic := map[string]interface{}{
 		"Estilo_musical": "Pagode",
 		"AlbumTitle":     "Pagode 2000",
-		"Year":           2003,
+		"Year":           2009,
 		"Midia": struct {
 			tipo  string
 			price float64
