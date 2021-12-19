@@ -47,10 +47,11 @@ func Test_Validators_Id_Missing(t *testing.T) {
 	}
 }
 
+//	Neste test não passamos o campo version,
+//	Validação deverá preencher criar o campo e preencher com latest
+//TODO(Jorge Luis): Lógica desabilitada na operação de createApp
+
 /*
-	Neste test não passamos o campo version,
-	Validação deverá preencher criar o campo e preencher com latest
-*/
 func Test_Validators_Version_Missing(t *testing.T) {
 
 	//Cenário
@@ -74,6 +75,7 @@ func Test_Validators_Version_Missing(t *testing.T) {
 	}
 
 }
+*/
 
 /*
 	Neste teste não passamos o campo document (obrigatório),

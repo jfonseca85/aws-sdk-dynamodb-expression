@@ -5,25 +5,25 @@ package app
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"log"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/expression"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"github.com/jfonseca85/aws-sdk-dynamodb-expression/configlocal"
 )
 
-func CreateApp(args map[string]string) (string, error) {
+func CreateApp(args map[string]string) (*Model, error) {
 	fmt.Println("Invoke CreateApp")
 
 	fmt.Println("Invoke ValidateParams")
 	err := ValidateParams(args, CreateAppParams())
 	if err != nil {
 		fmt.Println("Erro durante a validação do parametros: ", err.Error())
-		return "", err
+		return nil, err
 	}
 
 	cfg, err := configlocal.NewConfig(context.TODO())
@@ -38,16 +38,21 @@ func CreateApp(args map[string]string) (string, error) {
 	output, err := Update(client, input)
 	if err != nil {
 		fmt.Println("Erro no Update/Create App, " + err.Error())
-		return "", err
+		return nil, err
 	}
-
-	ret, err := json.Marshal(output)
+	//TODO(Jorge Luis): Retornar o model App no formato Json
+	ret, err := buildResponseCreate(output)
 	if err != nil {
-		fmt.Println("Erro ao fazer o bind do App, " + err.Error())
-		return "", err
+		return nil, err
 	}
-	return string(ret), nil
+	return ret, nil
 
+}
+
+func buildResponseCreate(out *dynamodb.UpdateItemOutput) (*Model, error) {
+	var response Model
+	err := attributevalue.UnmarshalMap(out.Attributes, &response)
+	return &response, err
 }
 
 func Update(clientDynamoDB *dynamodb.Client, input *dynamodb.UpdateItemInput) (*dynamodb.UpdateItemOutput, error) {
