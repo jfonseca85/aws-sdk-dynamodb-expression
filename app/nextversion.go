@@ -10,7 +10,7 @@ import (
 )
 
 func NextVersion(clientDynamoDB *dynamodb.Client, id string) string {
-	//Função criada para retornar a próxima versão da Célula, cada atualização feita incrementará um versão
+	//Função criada para retornar a próxima versão do App, cada atualização feita incrementará um versão
 	input := &dynamodb.UpdateItemInput{
 		TableName: aws.String(AttributeTableNameApp),
 		Key: map[string]types.AttributeValue{

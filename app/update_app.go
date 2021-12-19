@@ -17,7 +17,6 @@ func UpdateApp(args map[string]string) (*Model, error) {
 }
 
 func updateAppParams() []*Param {
-
 	return []*Param{
 		{
 			Name:     argId,
