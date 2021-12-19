@@ -7,13 +7,11 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"log"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
-	"github.com/jfonseca85/aws-sdk-dynamodb-expression/configlocal"
 )
 
 func ListAppsParams() []*Param {
@@ -21,20 +19,15 @@ func ListAppsParams() []*Param {
 }
 
 func ListApps(ctx context.Context, args map[string]string) (string, error) {
-	log.Printf("Getting ListApps Apps>>> ")
+	fmt.Println("Invoke ListApps")
 
 	err := ValidateParams(args, ListAppsParams())
 	if err != nil {
 		return "", err
 	}
 
-	//client := config.AWSClient.DynamoDB()
-	cfg, err := configlocal.NewConfig(context.TODO())
-	if err != nil {
-		log.Fatalf("unable to load SDK config, %v", err)
-	}
 	// Using the Config value, create the DynamoDB client
-	client := dynamodb.NewFromConfig(cfg.AWSClient)
+	client := InitClient()
 
 	out, err := listApps(client, buildScanInput())
 	if err != nil {
@@ -49,10 +42,10 @@ func ListApps(ctx context.Context, args map[string]string) (string, error) {
 func buildScanInput() *dynamodb.ScanInput {
 	// Build the input parameters for the request.
 	input := &dynamodb.ScanInput{
-		TableName:        aws.String("dynamodb-table-appcell"),
+		TableName:        aws.String("dynamodb-table-app"),
 		FilterExpression: aws.String("#version <> :version"),
 		ExpressionAttributeNames: map[string]string{
-			"#version": "Version",
+			"#version": "version",
 		},
 		ExpressionAttributeValues: map[string]types.AttributeValue{
 			":version": &types.AttributeValueMemberS{Value: AttributeVersionReservedVersion},
@@ -63,7 +56,6 @@ func buildScanInput() *dynamodb.ScanInput {
 }
 
 func listApps(clientDynamoDB *dynamodb.Client, params *dynamodb.ScanInput) (*dynamodb.ScanOutput, error) {
-	log.Printf("Chamando o app.List>>> ")
 	output, err := clientDynamoDB.Scan(context.TODO(), params)
 	if err != nil {
 		return nil, err
