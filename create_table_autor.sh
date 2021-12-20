@@ -11,3 +11,4 @@ aws dynamodb create-table \
         AttributeName=version,KeyType=RANGE \
 --provisioned-throughput \
         ReadCapacityUnits=10,WriteCapacityUnits=5
+#--endpoint-url http://localhost:8000
