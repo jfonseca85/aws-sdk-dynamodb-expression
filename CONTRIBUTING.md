@@ -21,7 +21,7 @@ Confira o git-flow detalhado neste diagrama:
 
 ## Nossos Produtos
 
-- [Control Plane Agent](https://github.com/jfonseca85/arquitetura-onion/issues)
+- [arquitetura-onion](https://github.com/jfonseca85/arquitetura-onion/issues)
 
 ## Sobre OpenSource
 
